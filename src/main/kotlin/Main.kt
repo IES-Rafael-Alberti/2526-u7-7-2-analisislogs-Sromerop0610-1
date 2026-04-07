@@ -1,16 +1,32 @@
 package org.iesra
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
+import java.io.File
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
+fun main() {
+    val contenido = File("sample_app.log").readLines()
+    var mensajeInfo = 0
+    var mensajeWarning = 0
+    var mensajeError = 0
+
+    val regexFechaHora = Regex("""\[\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) (?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d\]""")
+
+    for (linea in contenido) {
+        val indiceCierre = linea.indexOf(']')
+        if (indiceCierre != -1) {
+            val fechaHora = linea.substring(0, indiceCierre + 1)
+            val mensaje = linea.substring(indiceCierre + 1).trim()
+
+            if (regexFechaHora.matches(fechaHora)) {
+                when {
+                    mensaje.contains("INFO") -> mensajeInfo++
+                    mensaje.contains("WARNING") -> mensajeWarning++
+                    mensaje.contains("ERROR") -> mensajeError++
+                }
+            } else {
+                println("Formato inválido de fecha/hora en línea: $linea")
+            }
+        }
     }
+
+    println("Mensaje Info: $mensajeInfo, Error: $mensajeError, Warning: $mensajeWarning")
 }
