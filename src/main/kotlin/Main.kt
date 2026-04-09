@@ -50,12 +50,31 @@ fun main(args: Array<String>) {
                         mensaje.contains("WARNING") -> mensajeWarning++
                         mensaje.contains("ERROR") -> mensajeError++
                     }
-                } else {
-                    println("Formato inválido de fecha/hora en línea: $linea")
+
+                    if (primeraFecha == null || fecha.isBefore(primeraFecha)) {
+                        primeraFecha = fecha
+                    }
+
+                    if (ultimaFecha == null || fecha.isAfter(ultimaFecha)) {
+                        ultimaFecha = fecha
+                    }
                 }
+            }else {
+                lineasInvalidas++
+                println("Formato inválido de fecha/hora en línea: $linea")
             }
+        } else {
+            lineasInvalidas++
         }
     }
 
-    println("Mensaje Info: $mensajeInfo, Error: $mensajeError, Warning: $mensajeWarning")
+    println("\n--- INFORME ---")
+    println("Total líneas procesadas: $totalLineas")
+    println("Total líneas válidas: $lineasValidas")
+    println("Total líneas inválidas: $lineasInvalidas")
+    println("Número de INFO: $mensajeInfo")
+    println("Número de WARNING: $mensajeWarning")
+    println("Número de ERROR: $mensajeError")
+    println("Primera fecha encontrada: ${primeraFecha ?: "N/A"}")
+    println("Última fecha encontrada: ${ultimaFecha ?: "N/A"}")
 }
