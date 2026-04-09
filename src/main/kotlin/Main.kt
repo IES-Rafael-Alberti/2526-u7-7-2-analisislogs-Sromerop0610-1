@@ -72,9 +72,9 @@ fun main(args: Array<String>) {
     println("Total líneas procesadas: $totalLineas")
     println("Total líneas válidas: $lineasValidas")
     println("Total líneas inválidas: $lineasInvalidas")
-    println("Número de INFO: $mensajeInfo")
-    println("Número de WARNING: $mensajeWarning")
-    println("Número de ERROR: $mensajeError")
+    println("Número de mensajes de INFO: $mensajeInfo")
+    println("Número de mensajes de WARNING: $mensajeWarning")
+    println("Número de mensajes de ERROR: $mensajeError")
     println("Primera fecha encontrada: ${primeraFecha ?: "N/A"}")
     println("Última fecha encontrada: ${ultimaFecha ?: "N/A"}")
 }
