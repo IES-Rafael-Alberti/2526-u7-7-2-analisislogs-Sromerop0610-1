@@ -21,7 +21,7 @@ class LogAnalyzer {
     var ultimaFecha: LocalDateTime? = null
         private set
 
-    fun analyze(entries: List<LogEntry>, fechaInicio: LocalDateTime? = null, fechaFin: LocalDateTime? = null) {
+    fun analyze(entries: List<LogEntry>, fechaInicio: LocalDateTime? = null, fechaFin: LocalDateTime? = null, niveles: Set<Nivel>?= null) {
         totalLineas = entries.size
         for (entry in entries) {
             val dentroRango = (fechaInicio == null || !entry.fecha.isBefore(fechaInicio)) &&

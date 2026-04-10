@@ -8,5 +8,7 @@ data class OpcionesComandos(
     var stdout: Boolean = false,
 
     var from: LocalDateTime? = null,
-    var to: LocalDateTime? = null
+    var to: LocalDateTime? = null,
+
+    var levels: Set<Nivel>? = null
 )

@@ -1,4 +1,5 @@
 import org.iesra.OpcionesComandos
+import org.iesra.Nivel
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -59,6 +60,28 @@ class ParserOpcionesComandos {
                     } catch (e: DateTimeParseException) {
                         throw IllegalArgumentException("Formato de fecha inválido en --to")
                     }
+                }
+
+                "-l", "--level" -> {
+                    i++
+                    if (i >= args.size) {
+                        throw IllegalArgumentException("Falta el valor para --level")
+                    }
+
+                    val nivelesTexto = args[i].split(",")
+
+                    val niveles = mutableSetOf<Nivel>()
+
+                    for (nivelTexto in nivelesTexto) {
+                        val nivel = try {
+                            Nivel.valueOf(nivelTexto.trim().uppercase())
+                        } catch (e: IllegalArgumentException) {
+                            throw IllegalArgumentException("Nivel no válido: $nivelTexto")
+                        }
+                        niveles.add(nivel)
+                    }
+
+                    options.levels = niveles
                 }
 
                 else -> {

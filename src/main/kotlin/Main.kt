@@ -13,7 +13,6 @@ fun main(args: Array<String>) {
         return
     }
 
-    // Validaciones
     if (options.input == null) {
         println("Error: debes indicar --input")
         return
@@ -45,7 +44,7 @@ fun main(args: Array<String>) {
 
     val entries = lineas.mapNotNull { parser.parseLine(it) }
 
-    analyzer.analyze(entries, options.from, options.to)
+    analyzer.analyze(entries, options.from, options.to, options.levels)
 
     val report = reporter.generateReport(analyzer)
 
