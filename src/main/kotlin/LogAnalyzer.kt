@@ -21,29 +21,41 @@ class LogAnalyzer {
     var ultimaFecha: LocalDateTime? = null
         private set
 
-    fun analyze(entries: List<LogEntry>, fechaInicio: LocalDateTime? = null, fechaFin: LocalDateTime? = null, niveles: Set<Nivel>?= null) {
-        totalLineas = entries.size
-        for (entry in entries) {
-            val dentroRango = (fechaInicio == null || !entry.fecha.isBefore(fechaInicio)) &&
-                    (fechaFin == null || !entry.fecha.isAfter(fechaFin))
+    fun analyze(
+        entries: List<LogEntry>,
+        fechaInicio: LocalDateTime? = null,
+        fechaFin: LocalDateTime? = null,
+        niveles: Set<Nivel>? = null,
+        invalidasExternas: Int = 0
+    ) {
+        totalLineas = entries.size + invalidasExternas
+        lineasInvalidas = invalidasExternas
 
-            if (dentroRango) {
+        for (entry in entries) {
+
+            val dentroRango =
+                (fechaInicio == null || !entry.fecha.isBefore(fechaInicio)) &&
+                        (fechaFin == null || !entry.fecha.isAfter(fechaFin))
+
+            val cumpleNivel = (niveles == null || entry.nivel in niveles)
+
+            if (dentroRango && cumpleNivel) {
                 lineasValidas++
+
                 when (entry.nivel) {
                     Nivel.INFO -> mensajeInfo++
                     Nivel.WARNING -> mensajeWarning++
                     Nivel.ERROR -> mensajeError++
-                    Nivel.UNKNOWN -> lineasInvalidas++
+                    Nivel.UNKNOWN -> {}
                 }
 
                 if (primeraFecha == null || entry.fecha.isBefore(primeraFecha)) {
                     primeraFecha = entry.fecha
                 }
+
                 if (ultimaFecha == null || entry.fecha.isAfter(ultimaFecha)) {
                     ultimaFecha = entry.fecha
                 }
-            } else {
-                lineasInvalidas++
             }
         }
     }

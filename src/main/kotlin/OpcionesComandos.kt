@@ -10,5 +10,10 @@ data class OpcionesComandos(
     var from: LocalDateTime? = null,
     var to: LocalDateTime? = null,
 
-    var levels: Set<Nivel>? = null
+    var levels: Set<Nivel>? = null,
+
+    var stats: Boolean = false,
+    var report: Boolean = false,
+
+    var ignoreInvalid: Boolean = false
 )

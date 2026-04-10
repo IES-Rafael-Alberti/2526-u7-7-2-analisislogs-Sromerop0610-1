@@ -18,17 +18,11 @@ class ParserOpcionesComandos {
 
                 "-i", "--input" -> {
                     i++
-                    if (i >= args.size) {
-                        throw IllegalArgumentException("Falta el fichero de entrada")
-                    }
                     options.input = args[i]
                 }
 
                 "-o", "--output" -> {
                     i++
-                    if (i >= args.size) {
-                        throw IllegalArgumentException("Falta el fichero de salida")
-                    }
                     options.output = args[i]
                 }
 
@@ -38,50 +32,32 @@ class ParserOpcionesComandos {
 
                 "-f", "--from" -> {
                     i++
-                    if (i >= args.size) {
-                        throw IllegalArgumentException("Falta la fecha inicial")
-                    }
-
-                    options.from = try {
-                        LocalDateTime.parse(args[i], formatter)
-                    } catch (e: DateTimeParseException) {
-                        throw IllegalArgumentException("Formato de fecha inválido en --from")
-                    }
+                    options.from = LocalDateTime.parse(args[i], formatter)
                 }
 
                 "-t", "--to" -> {
                     i++
-                    if (i >= args.size) {
-                        throw IllegalArgumentException("Falta la fecha final")
-                    }
-
-                    options.to = try {
-                        LocalDateTime.parse(args[i], formatter)
-                    } catch (e: DateTimeParseException) {
-                        throw IllegalArgumentException("Formato de fecha inválido en --to")
-                    }
+                    options.to = LocalDateTime.parse(args[i], formatter)
                 }
 
                 "-l", "--level" -> {
                     i++
-                    if (i >= args.size) {
-                        throw IllegalArgumentException("Falta el valor para --level")
-                    }
-
-                    val nivelesTexto = args[i].split(",")
-
-                    val niveles = mutableSetOf<Nivel>()
-
-                    for (nivelTexto in nivelesTexto) {
-                        val nivel = try {
-                            Nivel.valueOf(nivelTexto.trim().uppercase())
-                        } catch (e: IllegalArgumentException) {
-                            throw IllegalArgumentException("Nivel no válido: $nivelTexto")
-                        }
-                        niveles.add(nivel)
-                    }
-
+                    val niveles = args[i].split(",").map {
+                        Nivel.valueOf(it.trim().uppercase())
+                    }.toSet()
                     options.levels = niveles
+                }
+
+                "-s", "--stats" -> {
+                    options.stats = true
+                }
+
+                "-r", "--report" -> {
+                    options.report = true
+                }
+
+                "--ignore-invalid" -> {
+                    options.ignoreInvalid = true
                 }
 
                 else -> {

@@ -11,17 +11,29 @@ class ReportGenerator {
             Total líneas procesadas: ${analyzer.totalLineas}
             Total líneas válidas: ${analyzer.lineasValidas}
             Total líneas inválidas: ${analyzer.lineasInvalidas}
-            Número de mensajes de INFO: ${analyzer.mensajeInfo}
-            Número de mensajes de WARNING: ${analyzer.mensajeWarning}
-            Número de mensajes de ERROR: ${analyzer.mensajeError}
-            Primera fecha encontrada: ${analyzer.primeraFecha ?: "N/A"}
-            Última fecha encontrada: ${analyzer.ultimaFecha ?: "N/A"}
+            INFO: ${analyzer.mensajeInfo}
+            WARNING: ${analyzer.mensajeWarning}
+            ERROR: ${analyzer.mensajeError}
+            Primera fecha: ${analyzer.primeraFecha ?: "N/A"}
+            Última fecha: ${analyzer.ultimaFecha ?: "N/A"}
         """.trimIndent()
     }
 
-    fun saveReport(rutaSalida: String, report: String) {
+    fun generateStats(analyzer: LogAnalyzer): String {
+        return """
+            --- ESTADÍSTICAS ---
+            Total líneas procesadas: ${analyzer.totalLineas}
+            Total líneas válidas: ${analyzer.lineasValidas}
+            Total líneas inválidas: ${analyzer.lineasInvalidas}
+            INFO: ${analyzer.mensajeInfo}
+            WARNING: ${analyzer.mensajeWarning}
+            ERROR: ${analyzer.mensajeError}
+        """.trimIndent()
+    }
+
+    fun saveReport(path: String, content: String) {
         try {
-            File(rutaSalida).writeText(report)
+            File(path).writeText(content)
         } catch (e: IOException) {
             println("Error al escribir el fichero de salida")
         }

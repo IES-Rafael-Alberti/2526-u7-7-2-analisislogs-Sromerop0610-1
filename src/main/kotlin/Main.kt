@@ -25,9 +25,18 @@ fun main(args: Array<String>) {
 
     if (options.from != null && options.to != null) {
         if (options.from!!.isAfter(options.to)) {
-            println("Error: la fecha inicial es mayor que la final")
+            println("Error: rango de fechas inválido")
             return
         }
+    }
+
+    if (options.stats && options.report) {
+        println("Error: no puedes usar --stats y --report a la vez")
+        return
+    }
+
+    if (!options.stats && !options.report) {
+        options.report = true
     }
 
     val loader = LogFileLoader()
@@ -42,17 +51,43 @@ fun main(args: Array<String>) {
         return
     }
 
-    val entries = lineas.mapNotNull { parser.parseLine(it) }
+    val entries = mutableListOf<LogEntry>()
+    var invalidas = 0
 
-    analyzer.analyze(entries, options.from, options.to, options.levels)
+    for (linea in lineas) {
+        val entry = parser.parseLine(linea)
 
-    val report = reporter.generateReport(analyzer)
+        if (entry != null) {
+            entries.add(entry)
+        } else {
+            invalidas++
+
+            if (!options.ignoreInvalid) {
+                println("Línea inválida detectada: $linea")
+                return
+            }
+        }
+    }
+
+    analyzer.analyze(
+        entries,
+        options.from,
+        options.to,
+        options.levels,
+        invalidas
+    )
+
+    val output = if (options.stats) {
+        reporter.generateStats(analyzer)
+    } else {
+        reporter.generateReport(analyzer)
+    }
 
     if (options.stdout) {
-        println(report)
+        println(output)
     }
 
     options.output?.let {
-        reporter.saveReport(it, report)
+        reporter.saveReport(it, output)
     }
 }
