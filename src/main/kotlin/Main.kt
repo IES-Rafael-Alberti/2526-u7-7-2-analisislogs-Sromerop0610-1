@@ -1,8 +1,6 @@
 package org.iesra
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
+import ParserOpcionesComandos
 
 fun main(args: Array<String>) {
 
@@ -15,7 +13,7 @@ fun main(args: Array<String>) {
         return
     }
 
-    // VALIDACIONES BÁSICAS
+    // Validaciones
     if (options.input == null) {
         println("Error: debes indicar --input")
         return
@@ -24,6 +22,13 @@ fun main(args: Array<String>) {
     if (!options.stdout && options.output == null) {
         println("Error: debes indicar --stdout o --output")
         return
+    }
+
+    if (options.from != null && options.to != null) {
+        if (options.from!!.isAfter(options.to)) {
+            println("Error: la fecha inicial es mayor que la final")
+            return
+        }
     }
 
     val loader = LogFileLoader()
@@ -40,7 +45,7 @@ fun main(args: Array<String>) {
 
     val entries = lineas.mapNotNull { parser.parseLine(it) }
 
-    analyzer.analyze(entries)
+    analyzer.analyze(entries, options.from, options.to)
 
     val report = reporter.generateReport(analyzer)
 
